@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <title>Baleen Whales</title>
+    </head>
+
+    <body>
+
+        <div class="main">
+
+            <div class="header">
+
+                <div class="title_bar">
+
+                    <p> baleenwhales.exe </p>
+
+                    <div class="top_buttons">
+
+                        <div class="top_button_container">
+                            <img src="assets/minimize.png">
+                        </div>
+
+                        <div class="top_button_container">
+                            <img src="assets/fullscreen.png">
+                        </div>
+
+                        <div class="top_button_container">
+                            <img src="assets/close.png">
+                        </div>
+
+                    </div>
+                    
+                </div>
+
+                <div class="options_bar">
+
+                    <p> <u>F</u>ile </p>
+                    <p> <u>E</u>dit </p>
+                    <p> <u>V</u>iew </p>
+                    <p> <u>O</u>ptions </p>
+                    <p> <u>H</u>elp </p>
+
+                </div>
+
+                <div class="divider"></div>
+
+            </div>
+
+            <div class="container" id="container">
+
+            </div>
+
+            <div class="loadable_whales" id="loadable_whales">
+
+                <div class="scrollable_content">
+
+                    <button id="antarctic_minke_whale" onclick="selectWhale('antarctic_minke_whale')">Antarctic Minke Whale</button>
+                    <button id="blue_whale" onclick="selectWhale('blue_whale')">Blue Whale</button>
+                    <button id="bowhead_whale" onclick="selectWhale('bowhead_whale')">Bowhead Whale</button>
+                    <button id="brydes_whale" onclick="selectWhale('brydes_whale')">Bryde's Whale</button>
+                    <button id="common_minke_whale" onclick="selectWhale('common_minke_whale')">Common Minke Whale</button>
+                    <button id="edens_whale" onclick="selectWhale('edens_whale')">Eden's Whale</button>
+                    <button id="fin_whale" onclick="selectWhale('fin_whale')">Fin Whale</button>
+                    <button id="gray_whale" onclick="selectWhale('gray_whale')">Gray Whale</button>
+                    <button id="humpback_whale" onclick="selectWhale('humpback_whale')">Humpback Whale</button>
+                    <button id="north_atlantic_right_whale" onclick="selectWhale('north_atlantic_right_whale')">North Atlantic Right Whale</button>
+                    <button id="north_pacific_right_whale" onclick="selectWhale('north_pacific_right_whale')">North Pacific Right Whale</button>
+                    <button id="omuras_whale" onclick="selectWhale('omuras_whale')">Omura's Whale</button>
+                    <button id="pygmy_right_whale" onclick="selectWhale('pygmy_right_whale')">Pygmy Right Whale</button>
+                    <button id="rices_whale" onclick="selectWhale('rices_whale')">Rice's Whale</button>
+                    <button id="sei_whale" onclick="selectWhale('sei_whale')">Sei Whale</button>
+                    <button id="southern_right_whale" onclick="selectWhale('southern_right_whale')">Southern Right Whale</button>
+
+                </div>
+
+            </div>
+
+            <div class="credits" id="credits">
+
+                <p>Made by Carter Clifton</p>
+                <a href="https://carterclifton.ca" target="_blank">carterclifton.ca</a>
+                <p>carter.clifton05@gmail.com</p>
+
+            </div>
+
+            <div class="footer">
+
+                <button id="home_button" onclick="loadHome()">Select</button>
+                
+                <button id="view_button" onclick="loadView()">View</button>
+
+                <button id="credits_button" onclick="loadCredits()">Credits</button>
+
+            </div>
+
+        </div>
+
+    </body>
+
+    <script src="main.js"></script>
+
+</html>

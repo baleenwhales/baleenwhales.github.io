@@ -24,6 +24,15 @@ body {
 .main a {
     color: white;
     text-decoration: none;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.main button {
+    font-size: xxx-large;
+    font-family: 'Times New Roman', Times, serif;
+    border: 0;
+    background-color: black;
+    color: white;
 }
 
 .main a:hover {

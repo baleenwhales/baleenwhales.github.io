@@ -250,18 +250,8 @@ insert into courseblock (course_id, timeblock_id) VALUES
 PRAGMA foreign_keys = ON;`
 
 function copyCode() {
-    // // Get the text field
-    // var copyText = document.getElementById("myInput");
 
-    // // Select the text field
-    // copyText.select();
-    // copyText.setSelectionRange(0, 99999); // For mobile devices
-
-     // Copy the text inside the text field
     navigator.clipboard.writeText(code);
-
-    // Alert the copied text
-    // alert("Copied the setup SQL \nNavigate to: https://www.programiz.com/sql/online-compiler \nand paste the code.");
 
     if (window.confirm('Code successfully copied. Press "OK" to go to the online compiler to try it out, or press cancel to stay on this page.')) 
         {

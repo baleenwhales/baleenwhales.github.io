@@ -35,6 +35,14 @@ body {
     color: white;
 }
 
+.main button:hover {
+    color: lightgray;
+}
+
+.main button:active {
+    color: gray;
+}
+
 .main a:hover {
     color: gainsboro;
     text-decoration: underline;

@@ -249,6 +249,163 @@ insert into courseblock (course_id, timeblock_id) VALUES
 
 PRAGMA foreign_keys = ON;`
 
+// insert_new_course_sql
+var a = `BEGIN TRANSACTION;
+
+INSERT INTO course (course_id, section, title, credits, capacity, syllabus, info, instructor_id, room, department, term, year) VALUES
+(412, "11", "Advanced Data Structures", "3", 20, "Midterm : 20%, Assignments / Labs : 30%, Final Exam : 50%", "Learn about Advanced Data Structures", 302, "CS102", "Computer Science", "Fall", 2021);
+
+INSERT INTO prerequisites (course_id, prereq_id) VALUES
+(412, 408),
+(412, 409);
+
+INSERT INTO courseblock (course_id, timeblock_id) VALUES
+(412, "friday_afternoon"),
+(412, "monday_morning");
+
+INSERT INTO course_management (admin_id, course_id, action, date)
+VALUES (102, 412, "create new class", DATETIME('now'));
+
+END TRANSACTION;`
+
+// register_for_course_sql
+var b = `INSERT INTO enrollments (student_id, course_id, status)
+SELECT 203, 412, 'In Progress'
+WHERE NOT EXISTS (
+    -- check for missing prerequisites
+    SELECT 1
+    FROM prerequisites p
+    LEFT JOIN enrollments e ON p.prereq_id = e.course_id
+        AND e.student_id = 203
+        AND e.status = 'Passed'
+    WHERE p.course_id = 412
+    AND e.course_id IS NULL  -- if any prerequisite is missing, this returns rows
+) AND NOT EXISTS (
+    -- check for time conflicts with other "In Progress" courses
+    SELECT 1
+    FROM enrollments e
+    JOIN courseblock cb1 ON e.course_id = cb1.course_id
+    JOIN timeblock tb1 ON cb1.timeblock_id = tb1.timeblock_id
+    JOIN courseblock cb2 ON cb2.course_id = 412
+    JOIN timeblock tb2 ON cb2.timeblock_id = tb2.timeblock_id
+    WHERE e.student_id = 203
+    AND e.status = 'In Progress'
+    AND tb1.day = tb2.day  -- must be on the same day
+    AND tb1.start_time < tb2.end_time  -- ensures Course A starts before Course B ends
+    AND tb1.end_time > tb2.start_time  -- ensures Course A ends after Course B starts
+) AND (
+    -- ensure student has not registered for more than 10 courses in Fall + Winter
+    SELECT COUNT(*) FROM enrollments e
+    JOIN course c ON e.course_id = c.course_id
+    WHERE e.student_id = 203
+    AND c.term IN ('Fall', 'Winter')
+    AND e.status = 'In Progress'
+) < 10 AND (
+    -- ensure the current date is before the registration deadline
+    SELECT COUNT(*) FROM term t
+    JOIN course c ON c.term = t.term
+    WHERE c.course_id = 412
+    AND t.year = 2021
+    -- AND t.registration_deadline >= CURRENT_DATE
+) > 0 AND (
+    -- ensure the course is not full (current enrollment < capacity)
+    SELECT COUNT(*) FROM enrollments
+    WHERE course_id = 412
+        AND status = 'In Progress'
+) < (
+    SELECT capacity FROM course WHERE course_id = 412
+);`
+
+// retrieve_course_schedule_sql
+var c = `SELECT
+c.course_id,
+c.section,
+c.title,
+c.credits,
+c.room,
+c.term,
+c.year,
+c.instructor_id,
+f.first_name || ' ' || f.last_name AS instructor_name,
+tb.start_time,
+tb.end_time,
+tb.day
+FROM enrollments e
+JOIN course c ON e.course_id = c.course_id
+LEFT JOIN courseblock cb ON c.course_id = cb.course_id
+LEFT JOIN timeblock tb ON cb.timeblock_id = tb.timeblock_id
+LEFT JOIN faculty f ON c.instructor_id = f.faculty_id
+WHERE e.student_id = 203
+AND e.status = 'In Progress'
+ORDER BY c.course_id, tb.timeblock_id;`
+
+// update_capacity_sql
+var d = `BEGIN TRANSACTION;
+
+UPDATE course SET
+capacity = 25
+WHERE course_id = 412;
+
+INSERT INTO course_management (admin_id, course_id, action, date)
+VALUES (102, 412, "update class", DATETIME('now'));
+
+END TRANSACTION;`
+
+// list_prereq_sql
+var e = `SELECT 
+c.title AS course_name,
+c.course_id,
+pr.title AS prereq_name,
+p.prereq_id
+FROM 
+course c
+JOIN 
+prerequisites p ON c.course_id = p.course_id
+JOIN 
+course pr ON p.prereq_id = pr.course_id;`
+
+// list_student_prereq_sql
+var f = `SELECT
+c.course_id,
+c.title,
+c.credits,
+c.department,
+c.room,
+tb.start_time,
+tb.end_time,
+tb.day,
+p.prereq_id AS prereq_id,
+CASE
+    WHEN p.prereq_id IS NULL THEN 'Yes'  -- no prerequisites required
+    WHEN NOT EXISTS (
+        SELECT 1
+        FROM prerequisites pr
+        LEFT JOIN enrollments e ON pr.prereq_id = e.course_id
+            AND e.student_id = 201
+            AND e.status = 'Passed'
+        WHERE pr.course_id = c.course_id
+        AND e.course_id IS NULL  -- if any prerequisite is missing, return 'No'
+    ) THEN 'Yes'
+    ELSE 'No'
+END AS has_prerequisites
+FROM 
+course c
+LEFT JOIN 
+courseblock cb ON c.course_id = cb.course_id
+LEFT JOIN 
+timeblock tb ON cb.timeblock_id = tb.timeblock_id
+LEFT JOIN 
+prerequisites p ON c.course_id = p.course_id
+LEFT JOIN 
+enrollments e ON c.course_id = e.course_id
+AND e.student_id = 201
+AND e.status = 'Passed'
+WHERE 
+e.course_id IS NULL
+AND has_prerequisites = 'Yes'
+ORDER BY 
+c.course_id, tb.timeblock_id, p.prereq_id;`
+
 function copyCode() {
 
     navigator.clipboard.writeText(code);
@@ -257,4 +414,24 @@ function copyCode() {
         {
         window.open('https://www.programiz.com/sql/online-compiler', '_blank');
         };
+}
+
+function copySQL(sql) {
+
+    if (sql == "insert") {
+        code = a;
+    } else if (sql == "register") {
+        code = b;
+    } else if (sql == "schedule") {
+        code = c;
+    } else if (sql == "capacity") {
+        code = d;
+    } else if (sql == "prereq") {
+        code = e;
+    } else if (sql == "student_prereq") {
+        code = f;
+    }
+
+    navigator.clipboard.writeText(code);
+
 }

@@ -84,16 +84,15 @@ CREATE TABLE IF NOT EXISTS term (
 );
 
 CREATE TABLE IF NOT EXISTS notifications (
-    notification_id INTEGER PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS notifications (
+    date DATE NOT NULL,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
-    date DATE NOT NULL,
     courseID INTEGER,
     facultyID INTEGER,
-    adminID INTEGER,
+    PRIMARY KEY (date, facultyID),
     FOREIGN KEY (courseID) REFERENCES course(course_id),
-    FOREIGN KEY (facultyID) REFERENCES faculty(faculty_id),
-    FOREIGN KEY (adminID) REFERENCES admin(admin_id)
+    FOREIGN KEY (facultyID) REFERENCES faculty(faculty_id)
 );
 
 CREATE TABLE IF NOT EXISTS prerequisites (

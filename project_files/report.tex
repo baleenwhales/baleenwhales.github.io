@@ -79,10 +79,12 @@
 \usection{Assumptions}
 
 \begin{itemize}
-    \item A person must be either a faculty member, a student, or an admin. They cannot be more than one, or none of these.
-    \item A faculty member does not have to each any courses.
-    \item A student does not need to take any courses.
-    \item A student, faculty, and admin cannot have the same ID. This value is unique across all tables.
+    \item A person can either be a student, a faculty member or an admin. They cannot be more than one, and they cannot be none of them.
+    \item A faculty member does not have to teach any courses.
+    \item A student does not have to be in any courses.
+    \item A student does not need to declare a major.
+    \item A faculty member can only be the chair of one department, and a department can only have one chair.
+    \item A student, faculty, or an admin cannot have the same ID, this value is unique across all of the tables.
 \end{itemize}
 
 \usection{Entities and Attributes}
